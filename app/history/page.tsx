@@ -1,19 +1,18 @@
 import { getSessionUser } from "@/lib/auth";
-import LoginForm from "@/components/LoginForm";
+import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import HomePage from "@/components/HomePage";
+import HistoryPage from "@/components/HistoryPage";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const user = await getSessionUser();
-
-  if (!user) return <LoginForm />;
+  if (!user) redirect("/");
 
   return (
     <>
       <Navbar username={user.username} />
-      <HomePage currentUser={user} />
+      <HistoryPage />
     </>
   );
 }
