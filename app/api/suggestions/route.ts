@@ -2,6 +2,37 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { getSessionUser, currentMonthYear } from "@/lib/auth";
 
+export async function DELETE(req: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) {
+    return NextResponse.json({ error: "Not logged in" }, { status: 401 });
+  }
+  if (!user.is_admin) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "id required" }, { status: 400 });
+  }
+
+  const db = await getDb();
+
+  // Delete votes for this suggestion first (FK constraint)
+  await db.execute({
+    sql: "DELETE FROM votes WHERE suggestion_id = ?",
+    args: [Number(id)],
+  });
+
+  await db.execute({
+    sql: "DELETE FROM suggestions WHERE id = ?",
+    args: [Number(id)],
+  });
+
+  return NextResponse.json({ ok: true });
+}
+
 export async function GET() {
   const { month, year } = currentMonthYear();
   const db = await getDb();

@@ -98,6 +98,12 @@ export default function HomePage({ currentUser }: { currentUser: CurrentUser }) 
     load();
   }
 
+  async function removeSuggestion(id: number, title: string) {
+    if (!confirm(`Remove "${title}" from this month's suggestions?`)) return;
+    await fetch(`/api/suggestions?id=${id}`, { method: "DELETE" });
+    load();
+  }
+
   async function closeVoting() {
     if (!confirm("Close voting and declare a winner for this month?")) return;
     setClosingVoting(true);
@@ -269,6 +275,15 @@ export default function HomePage({ currentUser }: { currentUser: CurrentUser }) 
                 onUnvote={unvote}
                 totalVoters={totalVoters}
               />
+              {currentUser.is_admin && (
+                <button
+                  onClick={() => removeSuggestion(s.id, s.title)}
+                  className="absolute top-2 right-2 text-stone-300 hover:text-red-500 text-xs transition"
+                  title="Remove suggestion"
+                >
+                  ✕
+                </button>
+              )}
             </div>
           ))}
         </div>
