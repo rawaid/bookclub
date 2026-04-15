@@ -160,10 +160,10 @@ export default function HomePage({ currentUser }: { currentUser: CurrentUser }) 
             <h1 className="text-3xl font-bold text-stone-800 leading-tight">{winner.title}</h1>
             <p className="text-stone-500 text-base mt-1">by {winner.author}</p>
             {winner.description && (
-              <p className="text-stone-600 text-sm mt-3 line-clamp-3">{winner.description}</p>
+              <p className="text-stone-600 text-sm mt-3">{winner.description}</p>
             )}
             <p className="text-stone-400 text-xs mt-3">
-              Suggested by {winner.suggested_by} · {winner.vote_count} vote{winner.vote_count !== 1 ? "s" : ""}
+              {winner.vote_count} vote{winner.vote_count !== 1 ? "s" : ""}
             </p>
           </div>
         </div>

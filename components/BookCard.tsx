@@ -53,7 +53,7 @@ export default function BookCard({ suggestion, myVote, onVote, onUnvote, totalVo
         <h2 className="font-bold text-stone-800 text-lg leading-tight">{suggestion.title}</h2>
         <p className="text-stone-500 text-sm mb-1">{suggestion.author}</p>
         {suggestion.description && (
-          <p className="text-stone-600 text-sm line-clamp-3 mb-3">{suggestion.description}</p>
+          <p className="text-stone-600 text-sm mb-3">{suggestion.description}</p>
         )}
 
         {/* Vote bar */}
@@ -63,7 +63,6 @@ export default function BookCard({ suggestion, myVote, onVote, onUnvote, totalVo
               {suggestion.vote_count} vote{suggestion.vote_count !== 1 ? "s" : ""}
               {totalVoters > 0 && ` · ${pct}%`}
             </span>
-            <span className="text-stone-400">Suggested by {suggestion.suggester}</span>
           </div>
           <div className="w-full bg-stone-100 rounded-full h-1.5">
             <div

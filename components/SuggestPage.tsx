@@ -120,7 +120,7 @@ export default function SuggestPage() {
               <h3 className="font-semibold text-stone-800 leading-tight">{book.title}</h3>
               <p className="text-stone-500 text-sm mb-1">{book.author}</p>
               {book.description && (
-                <p className="text-stone-600 text-xs line-clamp-2 mb-3">{book.description}</p>
+                <p className="text-stone-600 text-xs mb-3">{book.description}</p>
               )}
               <button
                 onClick={() => suggest(book)}

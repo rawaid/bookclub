@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams.get("q");
   if (!q) return NextResponse.json({ books: [] });
 
-  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&fields=key,title,author_name,first_sentence,description,cover_i,cover_edition_key,isbn,oclc,lccn&limit=10`;
+  const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(q)}&fields=key,title,author_name,first_sentence,description,cover_i,cover_edition_key,isbn,oclc,lccn&limit=10&sort=editions`;
 
   const olRes = await fetch(url, { next: { revalidate: 3600 } });
   if (!olRes.ok) {
@@ -100,10 +100,10 @@ export async function GET(req: NextRequest) {
     };
   });
 
-  // Enrich any books missing a cover or description via Google Books (in parallel)
+  // Enrich books missing a cover via Google Books (in parallel, capped at 5)
   await Promise.all(
-    books.map(async (book) => {
-      if (book.cover_url && book.description) return;
+    books.slice(0, 5).map(async (book) => {
+      if (book.cover_url) return;
       const gb = await fetchGoogleBooksData(book.title, book.author);
       if (!book.cover_url) book.cover_url = gb.cover_url;
       if (!book.description) book.description = gb.description;

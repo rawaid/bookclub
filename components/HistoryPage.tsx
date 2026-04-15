@@ -85,9 +85,8 @@ export default function HistoryPage() {
                 <h2 className="font-bold text-stone-800 text-lg leading-tight">{w.title}</h2>
                 <p className="text-stone-500 text-sm mb-1">{w.author}</p>
                 {w.description && (
-                  <p className="text-stone-600 text-sm line-clamp-2">{w.description}</p>
+                  <p className="text-stone-600 text-sm">{w.description}</p>
                 )}
-                <p className="text-stone-400 text-xs mt-2">Suggested by {w.suggested_by}</p>
               </div>
             </div>
           ))}
