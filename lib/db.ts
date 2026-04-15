@@ -52,7 +52,29 @@ async function initSchema(db: Client) {
       vote_count INTEGER NOT NULL DEFAULT 0,
       UNIQUE(month, year)
     );
+
+    CREATE TABLE IF NOT EXISTS reading_progress (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      month INTEGER NOT NULL,
+      year INTEGER NOT NULL,
+      message TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
+
+  // Migration: add is_admin column if it doesn't exist yet
+  try {
+    await db.execute("ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0");
+  } catch {
+    // column already exists
+  }
+
+  // Ensure the admin account is flagged
+  await db.execute({
+    sql: "UPDATE users SET is_admin = 1 WHERE email = ?",
+    args: ["rawaidakhtar@gmail.com"],
+  });
 }
 
 export async function getDb(): Promise<Client> {

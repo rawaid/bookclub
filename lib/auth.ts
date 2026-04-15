@@ -4,6 +4,7 @@ import { getDb } from "./db";
 export interface SessionUser {
   id: number;
   username: string;
+  is_admin: boolean;
 }
 
 export async function getSessionUser(): Promise<SessionUser | null> {
@@ -15,14 +16,14 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 
   const db = await getDb();
   const result = await db.execute({
-    sql: "SELECT id, username FROM users WHERE id = ? AND username = ?",
+    sql: "SELECT id, username, is_admin FROM users WHERE id = ? AND username = ?",
     args: [Number(userId), username],
   });
 
   const row = result.rows[0];
   if (!row) return null;
 
-  return { id: Number(row.id), username: String(row.username) };
+  return { id: Number(row.id), username: String(row.username), is_admin: Boolean(row.is_admin) };
 }
 
 export function currentMonthYear() {

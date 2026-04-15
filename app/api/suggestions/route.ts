@@ -20,7 +20,18 @@ export async function GET() {
     args: [month, year],
   });
 
-  return NextResponse.json({ suggestions: result.rows, month, year });
+  const winnerResult = await db.execute({
+    sql: `SELECT mw.vote_count, s.title, s.author, s.cover_url, s.description, u.username as suggested_by
+          FROM monthly_winners mw
+          JOIN suggestions s ON s.id = mw.suggestion_id
+          JOIN users u ON u.id = s.suggested_by
+          WHERE mw.month = ? AND mw.year = ?`,
+    args: [month, year],
+  });
+
+  const winner = winnerResult.rows[0] ?? null;
+
+  return NextResponse.json({ suggestions: result.rows, month, year, winner });
 }
 
 export async function POST(req: NextRequest) {
